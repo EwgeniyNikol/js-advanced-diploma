@@ -12,5 +12,17 @@
  * ```
  * */
 export default class Team {
-  // TODO: write your logic here
+  constructor(characters) {
+    this.characters = characters || [];
+  }
+
+  add(character) {
+    this.characters.push(character);
+  }
+
+  * [Symbol.iterator]() {
+    for (const character of this.characters) {
+      yield character;
+    }
+  }
 }

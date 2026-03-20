@@ -4,14 +4,18 @@ export default class GameStateService {
   }
 
   save(state) {
-    this.storage.setItem('state', JSON.stringify(state));
+    this.storage.setItem('gameState', JSON.stringify(state));
   }
 
   load() {
     try {
-      return JSON.parse(this.storage.getItem('state'));
+      const state = JSON.parse(this.storage.getItem('gameState'));
+      if (!state) {
+        throw new Error('No saved game');
+      }
+      return state;
     } catch (e) {
-      throw new Error('Invalid state');
+      throw new Error('Invalid saved game');
     }
   }
 }

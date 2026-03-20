@@ -23,7 +23,26 @@
  * ```
  * */
 export function calcTileType(index, boardSize) {
-  // TODO: ваш код будет тут
+  const isTop = index < boardSize;
+  const isBottom = index >= boardSize * (boardSize - 1);
+  const isLeft = index % boardSize === 0;
+  const isRight = index % boardSize === boardSize - 1;
+
+  if (isTop) {
+    if (isLeft) return 'top-left';
+    if (isRight) return 'top-right';
+    return 'top';
+  }
+
+  if (isBottom) {
+    if (isLeft) return 'bottom-left';
+    if (isRight) return 'bottom-right';
+    return 'bottom';
+  }
+
+  if (isLeft) return 'left';
+  if (isRight) return 'right';
+
   return 'center';
 }
 
@@ -37,4 +56,54 @@ export function calcHealthLevel(health) {
   }
 
   return 'high';
+}
+
+export function formatCharacterInfo(character) {
+  return `🎖${character.level} ⚔${character.attack} 🛡${character.defence} ❤${character.health}`;
+}
+
+const moveDistances = {
+  swordsman: 4,
+  bowman: 2,
+  magician: 1,
+  vampire: 4,
+  undead: 2,
+  daemon: 1,
+};
+
+const attackDistances = {
+  swordsman: 1,
+  bowman: 2,
+  magician: 4,
+  vampire: 1,
+  undead: 2,
+  daemon: 4,
+};
+
+export function getMoveRange(character) {
+  return moveDistances[character.type] || 1;
+}
+
+export function getAttackRange(character) {
+  return attackDistances[character.type] || 1;
+}
+
+export function getAvailableCells(currentIndex, boardSize, range) {
+  const availableCells = [];
+  const row = Math.floor(currentIndex / boardSize);
+  const col = currentIndex % boardSize;
+
+  for (let i = 0; i < boardSize * boardSize; i++) {
+    const targetRow = Math.floor(i / boardSize);
+    const targetCol = i % boardSize;
+    const dx = Math.abs(targetRow - row);
+    const dy = Math.abs(targetCol - col);
+    const distance = Math.max(dx, dy);
+
+    if (distance <= range && distance > 0) {
+      availableCells.push(i);
+    }
+  }
+
+  return availableCells;
 }
